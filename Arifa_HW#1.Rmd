@@ -2,7 +2,7 @@
 title: 'Homework #1'
 author: "Arifa Begum"
 date: "2024-09-05"
-output: html_document
+output: github_document
 ---
 
 #Group Members: Arifa Begum, Nene Diallo, Sun Wo Kim, Leonardo Alcaide, Maria Camila
