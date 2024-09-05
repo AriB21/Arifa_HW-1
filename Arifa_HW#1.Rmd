@@ -1,0 +1,220 @@
+---
+title: 'Homework #1'
+author: "Arifa Begum"
+date: "2024-09-05"
+output: html_document
+---
+
+#Group Members: Arifa Begum, Nene Diallo, Sun Wo Kim, Leonardo Alcaide, Maria Camila
+---
+  
+
+##For my dice experiment, I conducted 20 experiments. For my control group, I rolled the dice normally 10 times. For my experimental group, I rolled the dice from high up at a great height and made sure it dropped on sandpaper. I did this for 10 times as well. I noticed I rolled more 6s with my experimental group rather than the normal dice rolling. I actually expected the opposite so this was interesting
+
+```{r}
+library(readr)
+library(ggplot2)
+#Result from Experiment
+#/Users/ari3/Desktop/R_Studio/   #my working directory 
+Dice.exp <- read.csv("/Users/ari3/Desktop/R_Studio/Dice_Experiment-Sheet1.csv")
+
+
+#plot for dice.exp
+
+
+#/Users/ari3/Desktop/R_Studio
+list.files(path = '/Users/ari3/Desktop/R_Studio'  
+, full.names = TRUE)
+
+
+
+# Combine both columns into one data frame with an indicator for facet wrapping
+Dice.exp_long <- data.frame(
+  Frequency = c(Dice.exp$Control.Group., Dice.exp$Experimental.Group.),
+  Group = rep(c("Control", "Experiment"), each = nrow(Dice.exp))
+)
+
+# Plot the combined histogram with facet_wrap
+ggplot(Dice.exp_long, aes(x = Roll Number, fill = Group)) +
+  geom_histogram(binwidth = 1, color = "black", alpha = 0.7) +
+  facet_wrap(~Group) +
+  labs(title = "Histogram of Frequency of 6",
+       x = "Frequency of 6",
+       y = "Count") +
+  theme_minimal()
+
+# Plotting the outcome for the Control Die
+ggplot(Dice.exp, aes(x = as.factor(Control.Group.))) +
+  geom_bar(fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Outcome of Control Die Rolls",
+       x = "Outcome (0 = Not a 6, 1 = Rolled a 6)",
+       y = "Count") +
+  theme_minimal()
+
+# Plotting the outcome for the Experimental Die
+ggplot(Dice.exp, aes(x = as.factor(Experimental.Group.))) +
+  geom_bar(fill = "green", color = "black", alpha = 0.7) +
+  labs(title = "Outcome of Experimental Die Rolls",
+       x = "Outcome (0 = Not a 6, 1 = Rolled a 6)",
+       y = "Count") +
+  theme_minimal()
+```
+
+
+
+
+
+## One thing I found interesting from these lines of coding is the fact that the majority of people have at least a high school diploma. I noticed there are many people with advanced degrees but there are fewer people with some college education. This demonstrates that a large number of people usually pursue higher education but might not complete it.
+## How does the distribution of education levels correlate with other variables such as income, employment status, and age?
+
+## Something else I noticed is that there is a small number of people who report being "very likely" or "somewhat likely" to be evicted or foreclosed in the near future. This suggests that despite overall housing stability, there are still some concerns about housing security for some people.
+## Are there specific income levels, geographic regions, and/or employment statuses that are more sensitive to housing instability?
+
+```{r}
+x <- 1:50
+w <- 1 + sqrt(x)/2
+example1 <- data.frame(x=x, y= x + rnorm(x)*w)
+attach(example1)
+```
+
+```{r}
+fm <- lm(y ~ x)
+summary(fm)
+```
+```{r}
+lrf <- lowess(x, y)
+plot(x, y)
+lines(x, lrf$y)
+abline(0, 1, lty=3)
+abline(coef(fm))
+```
+
+
+```{r}
+getwd()
+ load("Household_Pulse_data_ph4c2.RData")
+#glimpse(acs2017_ny) try this later
+Household_Pulse_data[1:10,1:6]
+
+detach()
+```
+```{r}
+attach(Household_Pulse_data)
+summary(Household_Pulse_data)
+```
+
+```{r}
+load("Household_Pulse_data_ph4c2.RData")
+#glimpse(acs2017_ny) try this later
+Household_Pulse_data[1:10,1:6]
+```
+
+```{r}
+attach(Household_Pulse_data)
+summary(Household_Pulse_data)
+```
+
+```{r}
+summary(TBIRTH_YEAR[GENID_DESCRIBE == "female"])
+```
+
+```{r}
+summary(TBIRTH_YEAR[GENID_DESCRIBE == "male"])
+```
+
+```{r}
+summary(TBIRTH_YEAR[GENID_DESCRIBE == "transgender"])
+```
+
+```{r}
+summary(TBIRTH_YEAR[GENID_DESCRIBE == "other"])
+```
+
+```{r}
+summary(TBIRTH_YEAR[GENID_DESCRIBE == "NA"])
+```
+
+```{r}
+# here i want to find average ages of men and women
+mean(TBIRTH_YEAR[GENID_DESCRIBE == "female"])
+```
+
+```{r}
+sd(TBIRTH_YEAR[GENID_DESCRIBE == "female"])
+```
+
+```{r}
+mean(TBIRTH_YEAR[GENID_DESCRIBE == "male"])
+```
+
+```{r}
+sd(TBIRTH_YEAR[GENID_DESCRIBE == "male"])
+```
+
+```{r}
+mean(TBIRTH_YEAR[ (GENID_DESCRIBE == "female") & (TBIRTH_YEAR > 1936) ]) 
+```
+
+```{r}
+summary(EEDUC)
+```
+```{r}
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+```{r}
+summary(EST_ST)
+```
+
+```{r}
+summary(INCOME)
+```
+```{r}
+Household_Pulse_data %>%
+  group_by(EST_ST) %>%
+  summarize(
+    avg = mean(2024 - TBIRTH_YEAR),
+    stdev = sd(2024 - TBIRTH_YEAR), 
+    n_obs = n()
+  ) 
+```
+
+```{r}
+Household_Pulse_data %>%
+  group_by(EST_ST) %>%
+  summarize(
+    age90th = quantile((2024 - TBIRTH_YEAR),probs = 0.9),
+    age10th = quantile((2024 - TBIRTH_YEAR),probs = 0.1), 
+    n_obs = n()
+  ) %>%
+  arrange(desc(age90th), .by_group = TRUE)
+```
+
+```{r}
+table(EEDUC,GENID_DESCRIBE)
+```
+```{r}
+xtabs(~EEDUC + GENID_DESCRIBE)
+```
+```{r}
+prop.table(table(EEDUC,GENID_DESCRIBE))
+```
+```{r}
+prop.table(table(EEDUC,EST_ST))
+```
+
+```{r}
+mean(TBIRTH_YEAR[(REGION == "Northeast")])
+```
+
+```{r}
+# alternatively
+restrict1 <- as.logical((REGION == "Northeast"))
+dat_northeast <- subset(Household_Pulse_data, restrict1)
+
+
+
+mean(TBIRTH_YEAR)
+```
+
